@@ -1,0 +1,27 @@
+---
+version: "3"
+
+volumes:
+  traefik_acme_data: {}
+
+services:
+  traefik:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/traefik/Dockerfile
+    image: production_traefik
+    restart: always
+    volumes:
+      - traefik_acme_data:/etc/traefik/acme/
+      - ./config/.htpasswd:/etc/traefik/.htpasswd:ro
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
+  # TODO demo only
+  mlflow:
+    image: jcdemo/flaskapp
+    restart: always
+    ports:
+      - "0.0.0.0:5000:5000"
