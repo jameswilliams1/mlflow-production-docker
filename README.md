@@ -1,6 +1,8 @@
-# Traefik Basic Auth
+# MLflow Production Docker
 
-Traefik in Docker with HTTP basic auth configured.
+A production ready<sup>1</sup> docker-compose deployment of MLflow using Traefik with HTTP Basic Auth.
+
+<sup>1</sup> This project is provided as is, and without a warranty of any kind, see [LICENSE](../blob/master/LICENSE) for full details.
 
 ## Setup
 
@@ -34,12 +36,11 @@ SERVICE_NAME=mlflow
 SERVICE_PORT=5000
 # tell the user where they are logging into
 REALM=testsite
-# required for letsencrypt HTTPS email updates
+# required for letsencrypt certificate email updates
 EMAIL_ADDRESS=example@example.com
-
 ```
 
-Then write a `traefik.yml` config file using the `.env` variables:
+Finally write a `traefik.yml` config file using the `.env` variables:
 
 ```sh
 ./write_template.sh
@@ -47,10 +48,10 @@ Then write a `traefik.yml` config file using the `.env` variables:
 
 ## Running
 
-Start Traefik:
+Start all containers:
 
 ```sh
 docker-compose up -d --build
 ```
 
-The site is accessible on port 443, and port 80 redirects to 443.
+MLflow is accessible on port 443 over HTTPS (port 80 redirects to 443). Use the username and password you created above to log in.
