@@ -4,10 +4,10 @@ log:
 
 entryPoints:
   web:
-    address: ":80"
+    address: ":8080"
 
 #   web-secure:
-#     address: ":443"
+#     address: ":8443"
 
 # certificatesResolvers:
 #   letsencrypt:
@@ -40,11 +40,11 @@ http:
   #       certResolver: letsencrypt
 
   middlewares:
-    # redirect:
-    #   # https://docs.traefik.io/master/middlewares/redirectscheme/
-    #   redirectScheme:
-    #     scheme: https
-    #     permanent: true
+    redirect:
+      # https://docs.traefik.io/master/middlewares/redirectscheme/
+      redirectScheme:
+        scheme: https
+        permanent: true
     authorisation:
       basicAuth:
         usersFile: /etc/traefik/.htpasswd
