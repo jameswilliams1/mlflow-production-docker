@@ -55,3 +55,17 @@ docker-compose up -d --build
 ```
 
 MLflow is accessible on port 443 over HTTPS (port 80 redirects to 443). Use the username and password you created above to log in.
+
+## Database
+
+The metadata database for mlflow is configured to use an RDS database in a private subnet (no internet access). In situations where we need to directly access the database, we need to set up ssh tunneling. In order to do this run the following:
+
+```sh
+ssh -i "private.pem" -f -N -L 5433:<RDS-host>:5432 <ec2-user>@<ec2-endpoint> -v
+```
+
+This create ssh tunneling allowing you to connect to tracking database with the host `localhost` port `5433` and the expected other credentials (1password).
+
+NOTE: The "private.pem" key here is the one used to ssh into the server.
+
+For further information, look [here](https://aws.amazon.com/premiumsupport/knowledge-center/rds-connect-using-bastion-host-linux/`).
