@@ -129,10 +129,6 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Project specific
-.htpasswd
-config/traefik.yml
-
 # Pyre type checker
 .pyre/
 .history/
