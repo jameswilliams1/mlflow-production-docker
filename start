@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+DB_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+mlflow db upgrade $DB_URI
+
+mlflow server \
+    --backend-store-uri ${DB_URI} \
+    --default-artifact-root ${MLFLOW_ARTIFACT_URI} \
+    --host 0.0.0.0
