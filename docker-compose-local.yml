@@ -20,6 +20,7 @@ services:
       - "0.0.0.0:80:8080"
       - "0.0.0.0:443:8443"
 
+
   mlflow:
     build:
       context: .
@@ -38,9 +39,9 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_DB=${POSTGRES_DB}
       - MLFLOW_ARTIFACT_URI=${MLFLOW_ARTIFACT_URI}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      # - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      # - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      # - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
 
   postgres:
     image: postgres:11.8

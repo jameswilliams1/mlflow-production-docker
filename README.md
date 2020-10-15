@@ -38,6 +38,19 @@ SERVICE_PORT=5000
 REALM=testsite
 # required for letsencrypt certificate email updates
 EMAIL_ADDRESS=example@example.com
+
+# Database settings
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_DB=
+
+# Mlflow settings
+MLFLOW_ARTIFACT_URI=s3://bucket-name/
+
+# If using bentoml for deployment
+
 ```
 
 Finally write a `traefik.yml` config file using the `.env` variables:
@@ -69,3 +82,7 @@ This create ssh tunneling allowing you to connect to tracking database with the 
 NOTE: The "private.pem" key here is the one used to ssh into the server.
 
 For further information, look [here](https://aws.amazon.com/premiumsupport/knowledge-center/rds-connect-using-bastion-host-linux/`).
+
+- cert resolver needs a wildcard cert for subdomain
+- drop traefik volume on server
+- add entrypoint for backend server
