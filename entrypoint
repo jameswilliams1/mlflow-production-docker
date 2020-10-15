@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -euo pipefail
+
+export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+
+
+until nc -z postgres:5432 > /dev/null 2>&1; do
+    >&2 echo 'Sleeping till postgres is ready...'
+    sleep 1
+done
+>&2 echo 'PostgreSQL is available'
+
+
+exec "$@"

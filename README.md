@@ -1,4 +1,7 @@
-# MLflow Production Docker
+# traefik-basic-auth
+
+Traefik in Docker with HTTP basic auth configured.
+MLflow Production Docker
 
 A production ready<sup>1</sup> docker-compose deployment of MLflow using Traefik with HTTP Basic Auth.
 
@@ -38,6 +41,15 @@ SERVICE_PORT=5000
 REALM=testsite
 # required for letsencrypt certificate email updates
 EMAIL_ADDRESS=example@example.com
+# Database settings
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_DB=
+# Mlflow settings
+MLFLOW_ARTIFACT_URI=s3://bucket-name/
+# If using bentoml for deployment
 ```
 
 Finally write a `traefik.yml` config file using the `.env` variables:

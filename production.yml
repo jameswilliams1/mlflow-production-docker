@@ -1,0 +1,30 @@
+---
+version: "3"
+
+volumes:
+  traefik_acme_data: {}
+
+services:
+  traefik:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/traefik/Dockerfile
+    image: mlflow_production_traefik
+    restart: always
+    volumes:
+      - traefik_acme_data:/etc/traefik/acme/
+      - ./config/.htpasswd:/etc/traefik/.htpasswd:ro
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+    ports:
+      - "0.0.0.0:80:8080"
+      - "0.0.0.0:443:8443"
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/mlflow/Dockerfile
+    image: mlflow_production_server
+    restart: always
+    command: /start
+    env_file:
+      - .env
