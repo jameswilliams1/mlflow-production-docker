@@ -1,0 +1,93 @@
+---
+log:
+  level: INFO
+
+entryPoints:
+  web:
+    address: ":8080"
+
+  web-secure:
+    address: ":8443"
+
+# certificatesResolvers:
+#   letsencrypt:
+#     # https://doc.traefik.io/traefik/master/https/acme/#lets-encrypt
+#     acme:
+#       email: ${EMAIL_ADDRESS}
+#       storage: /etc/traefik/acme/acme.json
+#       # https://doc.traefik.io/traefik/master/https/acme/#httpchallenge
+#       httpChallenge:
+#         entryPoint: web
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      sniStrict: true
+      cipherSuites: # use only elliptic curve (the strongest) ciphers
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+
+global:
+  # https://doc.traefik.io/traefik/contributing/data-collection/
+  sendAnonymousUsage: true
+
+http:
+  routers:
+    web-router:
+      rule: "Host(`${DOMAIN_NAME}`)"
+      entryPoints:
+        - web
+      middlewares:
+        # - redirect
+        - authorisation
+        - security-headers
+      service: ${SERVICE_NAME}
+    # web-secure-router:
+    #   rule: "Host(`${DOMAIN_NAME}`)"
+    #   entryPoints:
+    #     - web-secure
+    #   middlewares:
+    #     - authorisation
+    #     - security-headers
+    #   service: ${SERVICE_NAME}
+    #   tls:
+    #     # https://doc.traefik.io/traefik/master/routing/routers/#certresolver
+    #     certResolver: letsencrypt
+
+  middlewares:
+    redirect:
+      # https://docs.traefik.io/master/middlewares/redirectscheme/
+      redirectScheme:
+        scheme: https
+        permanent: true
+    authorisation:
+      basicAuth:
+        usersFile: /etc/traefik/.htpasswd
+        removeHeader: true
+        realm: ${REALM}
+    security-headers:
+      # https://doc.traefik.io/traefik/middlewares/headers/#general
+      headers: # use only elliptic curve (the strongest) ciphers
+        # TODO increase stsSeconds to *at least* 31536000 (1 year) once HTTPS works
+        # stsSeconds: 60
+        # stsIncludeSubdomains: true
+        # stsPreload: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        customResponseHeaders:
+          server: ${SERVER_NAME}
+
+  services:
+    ${SERVICE_NAME}:
+      loadBalancer:
+        servers:
+          - url: http://${SERVICE_NAME}:${SERVICE_PORT}
+
+providers:
+  # https://doc.traefik.io/traefik/master/providers/file/
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true

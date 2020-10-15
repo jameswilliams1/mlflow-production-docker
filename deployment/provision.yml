@@ -1,0 +1,36 @@
+---
+- name: Provision
+  hosts: mlflow
+  roles:
+    - docker
+
+  tasks:
+    - block:
+        - name: Ensure Postgres apt key is present
+          apt_key:
+            url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+        - name: Ensure Postgres apt repo is present
+          apt_repository:
+            repo: "deb http://apt.postgresql.org/pub/repos/apt \
+            {{ ansible_distribution_release }}-pgdg main"
+          notify: Update apt cache
+
+        - name: Install required packages
+          apt:
+            name:
+                - postgresql
+                - gettext
+                - apache2-utils
+            state: present
+            update_cache: true
+            cache_valid_time: 600
+            autoremove: true
+            autoclean: true
+      become: true
+
+  handlers:
+    - name: Update apt cache
+      become: true
+      apt:
+        update_cache: true
